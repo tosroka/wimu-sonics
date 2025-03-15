@@ -6,8 +6,6 @@ Projekt ma na celu zweryfikować pracę "SONICS: Synthetic Or Not -- Identifying
 
 ## Planowany rozkład jazdy
 
-## Planowany rozkład jazdy
-
 #. 17.03-23.03  
   * Zapoznanie się z modelami SONICS do klasyfikacji oraz YuE i MusicGen do generacji. Pobranie ich lokalnie i wstępne uruchomienie
   * Pobranie opublikowanego zbioru Suno i Udio
