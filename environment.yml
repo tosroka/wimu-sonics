@@ -1,0 +1,6 @@
+name: wimu-sonics
+dependencies:
+  - matplotlib
+  - numpy
+  - pandas
+  - pathlib
