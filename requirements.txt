@@ -5,8 +5,8 @@
 click
 Sphinx
 coverage
-awscli
 flake8
+# awscli # dependency loop?
 python-dotenv>=0.5.1
 
 # added
