@@ -69,6 +69,34 @@ Projekt ma na celu zweryfikować pracę "SONICS: Synthetic Or Not -- Identifying
 * huggingface - modele SONICS i MusicGen
 * openai - generowanie słów do utworów na podstawie szablonów
 
+# Wnioski z paperów:
+1. "SONICS: Synthetic Or Not -- Identifying Counterfeit Songs"
+2. "DETECTING MUSIC DEEPFAKES IS EASY BUT ACTUALLY HARD"
+* dostępne repozytorium z kodem: https://github.com/deezer/deepfake-detector, jest dostępny jakiś lepszy model ale im się nie dzielą na razie?
+* na konferencji IEEE ICASSP 2025, 6-11 kwietnia może coś więcej będzie
+* skupia się na "waveform generators", a nie symbolicznych w papierze jest podane więcej generatorów niż te co używamy ale chyba te co mamy nam wystarczą
+* prosta konwolucja dała im wyniki ok. 90%, ale w dalszej części papera opisują że następujące aspekty nie są rozpatrywane: robustness to manipulation, generalisation to unseen generators,
+calibration and interpretability
+* modele do detekcji mogą uczyć się charakterystyk konkretnych modeli generatywnych: MusicGen might always interpret a text prompt in a
+certain way and in 4/4. Inny przyklad to w dekoderach checkerboard artefacts dla operacji dekonwolucji. Mogą też dopasowywać się do zbiorów danych, na których były uczony detektor np. publiczny zbiór danych dotyczących muzyki może być pełen muzyki klasycznej, podczas gdy zbiór danych deepfake obejmuje głównie muzykę rap i pop. Wtedy model będzie wykrywał muzykę klasyczną zamiast deepfaki. Ten sam problem może pojawiać się gdy compression codec that might confound the detection of deepfakes (e. g., all Riffusion songs are exported in mp3 192kB/s).
+* trenowali na FMA dataset, zachowują ten sam bitrate, ale normalizują do 44.1kHz
+* Testowali 3 autoencodery: Encodec, DAC oraz własny GriffinMel będący połączeniem mel-spektogramu i fazy Griffina-Lima. Testowali ich różne kombinacje dostępne na https://research.deezer.com/deepfake-detector/. Badali na reprezentacjach: the raw waveform, the complex STFT, its amplitude, its phase, or both stacked as polar coordinates. Stosowali do pre-processingu  normalisation, random mono mix, cutoff at 16kHz,
+and conversion to decibel scale when applicable.
+* Testowali modyfikacje: random pitch shift
+(±2 semitones), time stretch ([80, 120]%), EQ, reverb, addition of white noise, reencoding in mp3, aac, and opus in
+64kB/s. Implementation details are available in our repository.We leave attacks from more advanced users for future
+work (e. g., adversarial attacks). Po większości tych modyfikacji wynik modelu drastycznie spada, sprawdzali te modyfikacje też na prawdziwych danych i dalej zwracały te same wyniki czego wnioskiem jest że model sprawdza czy nie ma wyuczonych cech fałszywych. Nie trenowali modelu ponownie po tych zmianach ponieważ: 'there will always be an unseen manipulation'
+* Encoder generalisation: ponownie trenowali najlepszy model od podstaw na każdym z dziewięciu rozważanych dekoderów i sprawdzali, jak wydajność wykrywania przenosi się na pozostałe. I znowu można zauważyć spadek nawet do 0% w wykrywaniu bo klasa że muzyka jest prawdziwa jest domyślnie przewidywana
+* Sprawdzanie jak wykrywa gdy np. śpiew generowany a instrumenty prawdziwe, ale sami nie wiedzą co to powinno zwracać tylko zwraca to uwagę
+na to że należy ustalać specyfikację co powinien wykrywać
+* Interpretacja: Podmieniali losowo częsci spektrogramów prawdziwych fałszywmi fragmentami i pokazali że wykrywane są one na feature attribution maps. Piszą też że można wykorzystać concept learning, jeżeli cechą może być: 'spectrogram was related to its overall bluriness'
+3. "AI-Generated Music Detection and its Challenges"
+4. "YuE: Scaling Open Foundation Models for Long-Form Music Generation"
+5. "Simple and Controllable Music Generation"
+6.  "Transformer Interpretability Beyond Attention Visualization"
+7.  Może uda się zaadaptować do tego problemu SHAP https://shap.readthedocs.io/en/latest/example_notebooks/text_examples/question_answering/Explaining%20a%20Question%20Answering%20Transformers%20Model.html
+8. "Fake speech detection using VGGish with attention block"
+
 Project Organization
 ------------
 
