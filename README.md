@@ -91,6 +91,7 @@ work (e. g., adversarial attacks). Po większości tych modyfikacji wynik modelu
 na to że należy ustalać specyfikację co powinien wykrywać
 * Interpretacja: Podmieniali losowo częsci spektrogramów prawdziwych fałszywmi fragmentami i pokazali że wykrywane są one na feature attribution maps. Piszą też że można wykorzystać concept learning, jeżeli cechą może być: 'spectrogram was related to its overall bluriness'
 3. "AI-Generated Music Detection and its Challenges"
+* praktycznie to samo co poprzedni paper tylko przygotowany na konferencję
 4. "YuE: Scaling Open Foundation Models for Long-Form Music Generation"
 5. "Simple and Controllable Music Generation"
 6.  "Transformer Interpretability Beyond Attention Visualization"
