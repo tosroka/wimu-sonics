@@ -91,7 +91,7 @@ randomly, while for longer songs, a random crop is use
 * w apendix są statystki ich datasetu i składa się głównie z rock, folk, pop
 * zrobili też mniejsze testy na SkyMusic and SeedMusic, wyniki które pokazali znacząco spadły do 60% na Sky music dla najmniejszego modelu, a większe poniżej 30% ze względu na overfitting. Ale i tak pokazują że ich architektura działa lepiej niż dotychczasowe
 * jeżeli chcielbyśmy coś generować jak tutaj w paperze to są podane prompty w paperze
-### Opis cech błędnie przypisywanych klas:
+### Charakterystyka piosenek względem przypisanych klas:
 * In True Negative cases, we find distinct patterns
 in correctly classified real songs. These include characteristics such as unpredictability, dynamic
 variation, and unexpected changes that is often absent in fake songs. Examples include non-standard
