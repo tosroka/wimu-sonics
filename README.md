@@ -111,9 +111,7 @@ resemblance to genuine music.
 fake share characteristics with AI-generated music. These include unclear vocals, less rhythmic
 complexity, and a noticeable absence of the unexpected changes that typically distinguishes human-
 created performances. 
-* Finally, we encounter instances where we are unable to detect any audible
-artifacts. This suggests the presence of subtle, imperceptible, or inaudible artifacts (Barrington et al.,
-2023) akin to invisible artifacts (Chhabra et al., 2023) in synthetic images.
+* Finally, we encounter instances where we are unable to detect any audible artifacts. This suggests the presence of subtle, imperceptible, or inaudible artifacts akin to invisible artifacts in synthetic images.
   
 2. "DETECTING MUSIC DEEPFAKES IS EASY BUT ACTUALLY HARD"
 * dostępne repozytorium z kodem: https://github.com/deezer/deepfake-detector, jest dostępny jakiś lepszy model ale im się nie dzielą na razie?
