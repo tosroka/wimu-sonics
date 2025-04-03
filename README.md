@@ -71,6 +71,50 @@ Projekt ma na celu zweryfikować pracę "SONICS: Synthetic Or Not -- Identifying
 
 # Wnioski z paperów:
 1. "SONICS: Synthetic Or Not -- Identifying Counterfeit Songs"
+* Poprzednie modele które przytaczają (Singing Voice Synthesis i Singing Voice Conversion) korzystały z generowanego głosu ale instrumenty pochodziły z prawdziwych piosenek. Powodowało to "Karaoke effect" rozbieżności w głośności. Poza tym nie zwracały one uwagi na długoterminowe relacje czasowe takie jak refren itp.
+* Przygotowali swój własny dataset, średnii  czas utworu to 3 min żeby badać dłuższy kontekst
+* Wykorzystują Spectro-Temporal Tokens Transformer (SpecTTTra) jako architekturę, korzysta z Spectro-Temporal Tokenizer
+*  prawdziwe piosenki brali z Genius Lyrics Datase, nie jest z całego więc można zautomatyzować pobranie rzeczywistych jak byśmy chcieli więcej 
+* Używali do generowania Suno v2, v3, and v3.5. Suno v2, i Udio 32 and Udio 130, 
+* Do generowanie stosowane słowa piosenki oraz styl  (lyrics, style). Podział fakowych na: Full Fake (FF) — teskt i styl generowany losowo.
+Mostly Fake (MF) - tekst generowany podobny do podanego prawdziwego tekstu a styl brany na podstawie prawdziwej piosenki; Half Fake (HF)—
+tekst brany prawdziwy i styl też pobierany prawdziwy [Udio zabrania czegoś takiego na poziomie API]
+* Do modelu używali Mel-spectogramu, biorą go oraz jego transpozcyja i dzielą go na fragmenty żeby odpowiednio analizować zmiany w czasie(temporal) oraz zakresy częstotliowości (spectral). Podawane są one potem oddzielnie do odpowiednich tokenizerów i na koniec tokeny i embedingi są przekazywane do transformera który przypomina VIT
+* w treningu nie używali wszystkich modeli (Suno v2, Suno v3, Udio 32) oraz nie wszystkich twórców aby zapewnić i też sprawdzić że model uczy się ogólnej cechy czy muzyka jest generowana
+* preprocessing: 16kHz, spectogramy: n_fft=win_length=2048, hop_lenght=512, n_mels=128. Yielding a 128 × 128 spectrogram
+for 5 sec and 128 × 3744 for 120 sec audio. Any song shorter than input length is zero-padded
+randomly, while for longer songs, a random crop is use
+* Korzystają z augmentacji z  MixUp oraz SpecAugment TODO: sprawdzić jakeigo typu to augmentacje i najlepiej znaleźć jakąś której nie przewidzieli
+* Mają wniosek że łatwiej wykryć że utwór jest prawdziwy niż fałszywy, ten sam wniosek co w kolejnym artykule a w sumie go nie cytowali
+* Modele generatywne na których nie było trenowane działają gorzej ale nie jakoś bardzo, trzeba tylko zauważyć że biorą oni modele z tej samej rodziny tylko starsze wersje więc mają one pewnie jakieś wspólne cechy do tych nowszych
+* Jako ciekawostka raczej że stworzyli human-benchmark i daje on gorsze wyniki niż ich modelu
+* w apendix są statystki ich datasetu i składa się głównie z rock, folk, pop
+* zrobili też mniejsze testy na SkyMusic and SeedMusic, wyniki które pokazali znacząco spadły do 60% na Sky music dla najmniejszego modelu, a większe poniżej 30% ze względu na overfitting. Ale i tak pokazują że ich architektura działa lepiej niż dotychczasowe
+* jeżeli chcielbyśmy coś generować jak tutaj w paperze to są podane prompty w paperze
+### Opis cech błędnie przypisywanych klas:
+* In True Negative cases, we find distinct patterns
+in correctly classified real songs. These include characteristics such as unpredictability, dynamic
+variation, and unexpected changes that is often absent in fake songs. Examples include non-standard
+pitch variations, intricate rhythmic complexity, and expressive techniques like melismatic phrasing,
+sudden tempo changes, or improvisational segments, all of which showcase the nuanced artistry
+of human performance
+* in True Positive cases, we detect specific audible artifacts in correctly classified fake songs. These artifacts include mechanical or robotic vocal qualities, unclear
+vocal articulation, predictable rhythmic structures, and limited pitch variability. Such fake songs
+also lack the emotive expressiveness and complexity we consistently find in real music, making
+them notably distinct.
+* In False Negative cases, we observe that fake songs not detected as such
+lack the typical artifacts seen in true positive fake songs. Instead, these cases often incorporate
+features that mimic the unpredictability and nuanced variation of real songs. For instance, some
+include spoken interludes or conversational segments before the singing starts, creating a deceptive
+resemblance to genuine music.
+* In False Positive cases, we find that real songs misclassified as
+fake share characteristics with AI-generated music. These include unclear vocals, less rhythmic
+complexity, and a noticeable absence of the unexpected changes that typically distinguishes human-
+created performances. 
+* Finally, we encounter instances where we are unable to detect any audible
+artifacts. This suggests the presence of subtle, imperceptible, or inaudible artifacts (Barrington et al.,
+2023) akin to invisible artifacts (Chhabra et al., 2023) in synthetic images.
+  
 2. "DETECTING MUSIC DEEPFAKES IS EASY BUT ACTUALLY HARD"
 * dostępne repozytorium z kodem: https://github.com/deezer/deepfake-detector, jest dostępny jakiś lepszy model ale im się nie dzielą na razie?
 * na konferencji IEEE ICASSP 2025, 6-11 kwietnia może coś więcej będzie
@@ -97,6 +141,10 @@ na to że należy ustalać specyfikację co powinien wykrywać
 6.  "Transformer Interpretability Beyond Attention Visualization"
 7.  Może uda się zaadaptować do tego problemu SHAP https://shap.readthedocs.io/en/latest/example_notebooks/text_examples/question_answering/Explaining%20a%20Question%20Answering%20Transformers%20Model.html
 8. "Fake speech detection using VGGish with attention block"
+
+## Dodatkowy research potrzebny:
+* mixup, https://arxiv.org/pdf/1710.09412
+* SpecAugment, https://arxiv.org/pdf/1904.08779
 
 Project Organization
 ------------
