@@ -1,13 +1,18 @@
 from openai import OpenAI
 from openai.resources import chat
-import sys
 import wimu_sonics.data.load_data as l
-from api_key import KEY
+from api_key import KEY, KEY2
 import os
 from argparse import ArgumentParser
 from pathlib import Path
 
+
 MODEL = "deepseek/deepseek-r1:free"  # free słowo kluczowe, żeby nie bulić 6/10000 $
+
+
+class LimitExceeded(Exception):
+    def __init__(self):
+        super().__init__("Przekroczono limit 50 zapytań")
 
 
 model_prompts = {
@@ -25,15 +30,17 @@ def ask(chat: chat.Chat, content: str):
     response = chat.completions.create(
         model=MODEL, messages=[{"role": "user", "content": content}]
     )
+    if not response.choices:
+        raise LimitExceeded()
     return response.choices[0].message.content
 
 
-def save_answer(answer: str, number_of_data: int, model: str):
+def save_answer(answer: str, number_of_data: int):
     answer = answer.split("\n")
     answer = [line if line.strip() else "\n" for line in answer]
     lyrics, genre = "\n".join(answer[:-2]), answer[-1]
-    lyrics_path = l.get_lyrics(model)
-    genre_path = l.get_genre(model)
+    lyrics_path = l.get_lyrics()
+    genre_path = l.get_genre()
     if not os.path.exists(lyrics_path):
         os.makedirs(lyrics_path)
     with open(lyrics_path / f"lyrics_{number_of_data}.txt", "w") as f:
@@ -45,13 +52,13 @@ def save_answer(answer: str, number_of_data: int, model: str):
 
 
 def save_answer_musicgen(answer: str, i: int, out_path: Path):
-    out_path.mkdir(parents=True, exist_ok=True)
+    if not os.path.exists(out_path):
+        out_path.mkdir(parents=True, exist_ok=True)
     with (out_path / str(i)).with_suffix(".txt").open("w") as f:
         f.write(answer)
 
 
 if __name__ == "__main__":
-    client = OpenAI(api_key=KEY, base_url="https://openrouter.ai/api/v1")
     parser = ArgumentParser("Generate prompts for models using deepseek")
     parser.add_argument("n", type=int, help="Amount of samples to generate")
     parser.add_argument(
@@ -63,9 +70,24 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
+    base_url = "https://openrouter.ai/api/v1"
+    clients = [OpenAI(api_key=key, base_url=base_url) for key in [KEY, KEY2]]
     prompt = model_prompts[args.model]
-    for i in range(args.n):
-        answer = ask(chat=client.chat, content=prompt)
+    answer = None
+    clients = iter(clients)
+    client = next(clients)
+    i = 0
+    while i < args.n:
+        try:
+            answer = ask(chat=client.chat, content=prompt)
+            i += 1
+        except LimitExceeded:
+            try:
+                client = next(clients)
+            except StopIteration:
+                raise RuntimeError("No more clients available")
+            continue
+
         print("Generated:", answer)
         if args.model == "yue":
             save_answer(answer, i)
