@@ -32,3 +32,20 @@ def get_references_dir() -> Path:
     Gets references directory path.
     """
     return project_dir / 'references'
+
+
+def get_data() -> Path:
+    return project_dir / 'data'  # -> ...wimu-sonics/data
+
+
+def get_lyrics() -> Path:
+    return get_data() / 'prompt_egs' / 'lyrics'  # -> ...wimu-sonics/data/prompt_egs/lyrics
+
+
+def get_genre() -> Path:
+    return get_data() / 'prompt_egs' / 'genre'  # -> ...wimu-sonics/data/prompt_egs/genre
+
+
+def get_YuE() -> Path:
+    return get_data() / 'YuE'  # -> ...wimu-sonics/data/YuE
+
