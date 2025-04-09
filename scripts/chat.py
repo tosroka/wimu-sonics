@@ -2,7 +2,8 @@ from openai import OpenAI
 from openai.resources import chat
 import sys
 import wimu_sonics.data.load_data as l
-from scripts.token import KEY
+from api_key import KEY
+import os
 
 
 MODEL = "deepseek/deepseek-r1:free"  # free słowo kluczowe, żeby nie bulić 6/10000 $
@@ -18,6 +19,21 @@ def ask(chat: chat.Chat, content: str):
     return response.choices[0].message.content
 
 
+def save_answer(answer: str, number_of_data: int):
+    answer = answer.split('\n')
+    lyrics, genre = '\n'.join(answer[:-2]), ''.join(answer[-2:])
+    lyrics_path = l.get_lyrics()
+    genre_path = l.get_genre()
+    if not os.path.exists(lyrics_path):
+        os.makedirs(lyrics_path)
+    with open(lyrics_path  / f'lyrics_{number_of_data}.txt', 'w') as f:
+        f.write(lyrics)
+    if not os.path.exists(genre_path):
+        os.makedirs(genre_path)
+    with open(genre_path / f'genre_{number_of_data}.txt', 'w') as f:
+        f.write(genre)
+
+
 if __name__ == "__main__":
     client = OpenAI(
         api_key=KEY,
@@ -27,7 +43,7 @@ if __name__ == "__main__":
     try:
         n = int(sys.argv[1])
     except Exception:
-        print("Give number to generate lyrics and genres")
+        print("Give number to generate lyrics and genres for [n] songs")
         sys.exit(1)
     
     for i in range(n):
@@ -36,4 +52,4 @@ Every lyrics should have at least 2 verses and 2 choruses (after verse should be
 who is singing, how, mood of song, genre etc. Can you give answer like '[lyrics] empty line [key words in 1 line without ,]'?\
 Also in lyrics every chorus start with [chorus] and every verse with [verse] without any number next to it."
         answer = ask(chat=client.chat, content=question)
-        print(answer)
+        save_answer(answer, i)
