@@ -21,7 +21,8 @@ def ask(chat: chat.Chat, content: str):
 
 def save_answer(answer: str, number_of_data: int):
     answer = answer.split('\n')
-    lyrics, genre = '\n'.join(answer[:-2]), ''.join(answer[-2:])
+    answer = [line if line.strip() else '\n' for line in answer]
+    lyrics, genre = '\n'.join(answer[:-2]), answer[-1]
     lyrics_path = l.get_lyrics()
     genre_path = l.get_genre()
     if not os.path.exists(lyrics_path):
@@ -49,7 +50,7 @@ if __name__ == "__main__":
     for i in range(n):
         question = f"Please can you generate lyrics and key words which will describe songs lyrics?\
 Every lyrics should have at least 2 verses and 2 choruses (after verse should be chorus). Key words should describe for example\
-who is singing, how, mood of song, genre etc. Can you give answer like '[lyrics] empty line [key words in 1 line without ,]'?\
+genre, instrument, mood, gender, timbre and etc. Can you give answer like '[lyrics] empty line [key words in 1 line without ,]'?\
 Also in lyrics every chorus start with [chorus] and every verse with [verse] without any number next to it."
         answer = ask(chat=client.chat, content=question)
         save_answer(answer, i)
