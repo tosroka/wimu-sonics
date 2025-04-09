@@ -2,9 +2,9 @@ from openai import OpenAI
 from openai.resources import chat
 import sys
 import wimu_sonics.data.load_data as l
+from scripts.token import KEY
 
 
-KEY = "super tajny klucz"
 MODEL = "deepseek/deepseek-r1:free"  # free słowo kluczowe, żeby nie bulić 6/10000 $
 
 
