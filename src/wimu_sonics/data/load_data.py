@@ -38,12 +38,12 @@ def get_data() -> Path:
     return project_dir / 'data'  # -> ...wimu-sonics/data
 
 
-def get_lyrics() -> Path:
-    return get_data() / 'prompt_egs' / 'lyrics'  # -> ...wimu-sonics/data/prompt_egs/lyrics
+def get_lyrics(folder: str) -> Path:
+    return get_data() / 'prompt_egs' / folder / 'lyrics'  # -> ...wimu-sonics/data/prompt_egs/lyrics
 
 
-def get_genre() -> Path:
-    return get_data() / 'prompt_egs' / 'genre'  # -> ...wimu-sonics/data/prompt_egs/genre
+def get_genre(folder: str) -> Path:
+    return get_data() / 'prompt_egs' / folder / 'genre'  # -> ...wimu-sonics/data/prompt_egs/genre
 
 
 def get_YuE() -> Path:
