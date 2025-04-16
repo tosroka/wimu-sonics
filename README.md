@@ -139,10 +139,35 @@ na to że należy ustalać specyfikację co powinien wykrywać
 6.  "Transformer Interpretability Beyond Attention Visualization"
 7.  Może uda się zaadaptować do tego problemu SHAP https://shap.readthedocs.io/en/latest/example_notebooks/text_examples/question_answering/Explaining%20a%20Question%20Answering%20Transformers%20Model.html
 8. "Fake speech detection using VGGish with attention block"
+* Paper z EURASIP, 2024
+* Autorzy podsumowują dotyczhczasowe metody detekcji fałszywego audio, w szególności mowy
+* Istnieje bardzo dużo metod wykorzystujących ekstrakcję prostych cech (na przykład MFCC), a następnię klasyfikację
+* Praca opisuje swoją metodę detekcji, którą jest CNN z atencją. Architektura jest główną zaletą dobrych wyników, w gruncie rzezcy jest podobna do SONICS, ponieważ mamy tutaj doczynienia z transformerem, więc wnioski płynace z pracy mogą być dla nas wartościowe
+* Autorzy nie opisali dokładniej procesu uczenia, natomiast użyty zbiór danych (ASVspoof 2019) składa się jednocześnie z wygenerowanego audio, oraz nagrań prawdziwej mowy symulowanych jako odtworzone w różnych warunkach (tzw. replay attack), co nie jest celem analizowanego przez nas modelu. Opisany w pracy model natomiast rozwiązuje obydwa zadania.
+* Autorzy wyciągają dwa ciekawe wnioski ze swojej pracy. Pierwszym jest to, że róznice między prawdziwymi a wygenerowanymi utworami można szczególnie zauważyć w fragmentach bez muzyki/mowy. Wygenerowane utwory mają zawsze taką samą charakterystykę w mel-spektrogramie (przynajmniej w analizowanym zbiorze) i widoczne są "płaskie wzorce", natomiast prawdziwe nagrania mają zróżnicowane wzorce. Innym wnioskiem są problemy modelu z zaszumionymi próbkami, przy których działa gorzej, choć autorzy nie rozwinęli myśli o jakie zaszumienie chodzi.
 
-## Dodatkowy research potrzebny:
-* mixup, https://arxiv.org/pdf/1710.09412
-* SpecAugment, https://arxiv.org/pdf/1904.08779
+9. (Dodatkowe) Nowy świetny survey z 25 marca:
+https://arxiv.org/pdf/2409.15180
+https://github.com/AI-ResearchGroup/A-Comprehensive-Survey-with-
+Critical-Analysis-for-Deepfake-Speech-Detection
+"A Comprehensive Survey with Critical Analysis for Deepfake Speech Detection"
+* Bardzo skrupulatny paper, w którym jest sekcja poświęcona obecnym modelom, ale również istniejącym augumentacjom
+* Opisywane zniekształcenia audio, które pojawiają się w pracach:
+	* Usuwanie kanałów
+	* Maskowanie częstotliwości, wycinków czasu, lub innych fragmentów spektrogramu
+	* "Time wise silence streaming" - różnice w długości ciszy na początku/końcu utworu. Na zbiorze ASVspoof koreluje to z klasyfikacją
+	* Mixup
+	* Filtry skonczonej odpowiedzi impulsowej
+	* RawBoost https://arxiv.org/abs/2111.04433
+	* Dodanie paplaniny 
+	* wibracje
+	* szum bialy
+	* pogłos
+	* Zwiększanie głośności/szybkości/wysokości
+	* Różne algorytmy kompresji
+	* augumentacje on-line: Mixup, SpecAugment (po prostu 
+* Mieli udostępnić implementacje w librosie różnych przekształceń ale (jeszcze) nic nie ma
+* Niektóre z tych zniekształceń nadają się tylko w fazie treningu, głównie chodzi o słyszalne augumentacje, i choć można sprawdzić na nich model SONICS, to trudno powiedzieć czy powinien być w stanie z takimi danymi pracować.
 
 Project Organization
 ------------
