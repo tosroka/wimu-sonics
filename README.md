@@ -204,6 +204,15 @@ https://github.com/AI-ResearchGroup/A-Comprehensive-Survey-with-Critical-Analysi
 * Mieli udostępnić implementacje w librosie różnych przekształceń ale (jeszcze) nic nie ma
 * Niektóre z tych zniekształceń nadają się tylko w fazie treningu, głównie chodzi o słyszalne augumentacje, i choć można sprawdzić na nich model SONICS, to trudno powiedzieć czy powinien być w stanie z takimi danymi pracować.
 
+
+Wyniki:
+
+| Najmniejszy model | Największy model |
+|-----------|-----------|
+| ![img1](https://github.com/user-attachments/assets/562a7b5b-c6dd-4dde-b787-4733da76ef5a) | ![img2](https://github.com/user-attachments/assets/ef9c6e6f-f011-42c8-9350-cb59ba7871df) |
+
+
+
 Project Organization
 ------------
 
