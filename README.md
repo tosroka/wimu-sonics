@@ -135,6 +135,18 @@ na to że należy ustalać specyfikację co powinien wykrywać
 3. "AI-Generated Music Detection and its Challenges"
 * praktycznie to samo co poprzedni paper tylko przygotowany na konferencję
 4. "YuE: Scaling Open Foundation Models for Long-Form Music Generation"
+* Dostępny kod pod adresem: https://github.com/multimodal-art-projection/YuE
+* YuE generuje muzykę o długości do pięciu minut.
+* Obsługuje różne style muzyczne i języki
+* Rozdziela wokal i akompaniament
+* Umożliwia kontrolę poprzez tekst, referencję audio.
+* Pokrewne prace? Music Generation and Singing Voice Synthesis, Song Generation, Audio Tokenizers, Acoustic
+* Obejmuje cztery główne komponenty: audio tokenizer, text tokenizer i dwa LM. Konwertuje waveformsy do dyskretnych tokenów używając podejścia semantyczno-akustycznego.
+* Przy jednoczesnym modelowaniu wokalu i akompaniamentu - wokal był zagłuszany, więc reprezentują jako osobne tokeny dla wokalu i akompaniamentu.
+* Mieli trudności z modelowaniem długiego kontekstu, ponieważ embeddingi pozycyjne zaczynają tracić jakość po 3k tokenów. Przy 6k to tragedia nawet przy 16k-token wstępnie trenowanym kontekście. Dlatego podzielili generowanie muzyki na fragmenty do ~30s każdy.
+* Przeprojektowali ICL (In-Context Learning) dla muzyki oraz autorzy zauważyli, że jak włączli ICL zbyt wcześnie to zachęcało model do uczenia się na skróty, gdzie model miał tendencję do kopiowania dzwięku referencyjnego (plagiat), więc zrobili, że uczy się z opóźnieniem.
+Efekt: używając japońskiego popowego utworu z żeńskim wokalem jako odniesienia model może przekształcić tekst na angielski, zachowując tego samego wokalistę i gatunek, a nawet wygenerować męską wersję angielskiego rapu.
+* Trening: Wczesna faza to samo CoT (Continuation of Tokenized data). Czyli uczy się "przewidywać" co będzie dalej na podstawie niewielkiego wejścia. Dopiero potem wprowadzone ICL, aby nauczył się korzystać z referencji (jak dostaje potem) + jakieś prompty, żeby wygenerować coś swojego, a nie skopiować.
 5. "Simple and Controllable Music Generation"
 6.  "Transformer Interpretability Beyond Attention Visualization"
 7.  Może uda się zaadaptować do tego problemu SHAP https://shap.readthedocs.io/en/latest/example_notebooks/text_examples/question_answering/Explaining%20a%20Question%20Answering%20Transformers%20Model.html
