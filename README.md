@@ -158,6 +158,21 @@ Efekt: używając japońskiego popowego utworu z żeńskim wokalem jako odniesie
 * Porównywali wyniki z innymi modelami: Mousai, Riffusion, MusicLM i Noise2Music. Oceniane było przez ludzi (subiektywne) i przez FAD (obiektywne). Według słuchaczy było lepsze zarówno pod względem jakości dźwięku jak i zgodności z opisem tekstowym. Noise2Music był lepszy za to według FAD.
 
 6.  "Transformer Interpretability Beyond Attention Visualization"
+- 2021 CVPR
+- dostępny kod: https://github.com/hila-chefer/Transformer-Explainability
+- The method employs LRP-based relevance to compute
+scores for each attention head in each layer of a Transformer
+model. It then integrates these scores throughout the at-
+tention graph, by incorporating both relevancy and gradient
+information, in a way that iteratively removes the negative
+contributions. The result is a class-specific visualization for
+self-attention models.
+- w eksperymentach testowali na architekturze typu BERT w CV i NLP
+- badali dostępne metody które podzielili na attention-
+maps(agregacja wielu map), relevance(przepływ informacji), and gradient-based method
+- opisali problemy jakie pojawiają się w interpretowalności transformerów względem innych architektur: (class-
+agnostic - niezależnie od tego jaką klasę chcę się zinterpretować zwracane są te same wyniki, brak badanego przepływu, trudność z skip-connections)
+- piszą że jest to bardziej oszczędne obliczeniowo niż Shapely
 7.  Może uda się zaadaptować do tego problemu SHAP https://shap.readthedocs.io/en/latest/example_notebooks/text_examples/question_answering/Explaining%20a%20Question%20Answering%20Transformers%20Model.html
 8. "Fake speech detection using VGGish with attention block"
 * Paper z EURASIP, 2024
