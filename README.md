@@ -209,7 +209,8 @@ Wyniki:
 
 | Najmniejszy model | Największy model |
 |-----------|-----------|
-| ![img1](https://github.com/user-attachments/assets/562a7b5b-c6dd-4dde-b787-4733da76ef5a) | ![img2](https://github.com/user-attachments/assets/ef9c6e6f-f011-42c8-9350-cb59ba7871df) |
+|  ![image](https://github.com/user-attachments/assets/97b16e7e-272f-43bd-b0cd-32d0a5bd56ad) | ![img1](https://github.com/user-attachments/assets/562a7b5b-c6dd-4dde-b787-4733da76ef5a)
+ |
 
 
 
