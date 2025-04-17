@@ -136,7 +136,7 @@ na to że należy ustalać specyfikację co powinien wykrywać
 * praktycznie to samo co poprzedni paper tylko przygotowany na konferencję
 4. "YuE: Scaling Open Foundation Models for Long-Form Music Generation"
 * Dostępny kod pod adresem: https://github.com/multimodal-art-projection/YuE
-* YuE generuje muzykę o długości do pięciu minut.
+* YuE generuje muzykę o długości do pięciu minut
 * Obsługuje różne style muzyczne i języki
 * Rozdziela wokal i akompaniament
 * Umożliwia kontrolę poprzez tekst, referencję audio.
@@ -148,6 +148,15 @@ na to że należy ustalać specyfikację co powinien wykrywać
 Efekt: używając japońskiego popowego utworu z żeńskim wokalem jako odniesienia model może przekształcić tekst na angielski, zachowując tego samego wokalistę i gatunek, a nawet wygenerować męską wersję angielskiego rapu.
 * Trening: Wczesna faza to samo CoT (Continuation of Tokenized data). Czyli uczy się "przewidywać" co będzie dalej na podstawie niewielkiego wejścia. Dopiero potem wprowadzone ICL, aby nauczył się korzystać z referencji (jak dostaje potem) + jakieś prompty, żeby wygenerować coś swojego, a nie skopiować.
 5. "Simple and Controllable Music Generation"
+* Dostępny pod adresem https://github.com/facebookresearch/audiocraft/tree/main
+* Architektura to dekoder oparty na autoregresywnym transformerze
+* Do audio tokenizacji użyli EnCode (convolutional auto-encoder)
+* Dataset treningowy: użyli 20k godzin z licencjonowanego źródła.
+* Dataset ewaluacyjny: MusicCaps - 5.5k próbek 10 sekundowych i 1k próbek z podzbioru zrównoważonego pod względem gatunków.
+* Trenowali transformer z użyciem 32, 64, 96 GPUs w zależności czy model miał 300M, 1.5B, 3.3B parametrów.
+* Trenowali transformery na 30 sekundowych wycinkach
+* Porównywali wyniki z innymi modelami: Mousai, Riffusion, MusicLM i Noise2Music. Oceniane było przez ludzi (subiektywne) i przez FAD (obiektywne). Według słuchaczy było lepsze zarówno pod względem jakości dźwięku jak i zgodności z opisem tekstowym. Noise2Music był lepszy za to według FAD.
+
 6.  "Transformer Interpretability Beyond Attention Visualization"
 7.  Może uda się zaadaptować do tego problemu SHAP https://shap.readthedocs.io/en/latest/example_notebooks/text_examples/question_answering/Explaining%20a%20Question%20Answering%20Transformers%20Model.html
 8. "Fake speech detection using VGGish with attention block"
