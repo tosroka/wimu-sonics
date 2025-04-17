@@ -184,8 +184,7 @@ agnostic - niezależnie od tego jaką klasę chcę się zinterpretować zwracane
 
 9. (Dodatkowe) Nowy świetny survey z 25 marca:
 https://arxiv.org/pdf/2409.15180
-https://github.com/AI-ResearchGroup/A-Comprehensive-Survey-with-
-Critical-Analysis-for-Deepfake-Speech-Detection
+https://github.com/AI-ResearchGroup/A-Comprehensive-Survey-with-Critical-Analysis-for-Deepfake-Speech-Detection
 "A Comprehensive Survey with Critical Analysis for Deepfake Speech Detection"
 * Bardzo skrupulatny paper, w którym jest sekcja poświęcona obecnym modelom, ale również istniejącym augumentacjom
 * Opisywane zniekształcenia audio, które pojawiają się w pracach:
