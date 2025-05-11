@@ -12,5 +12,6 @@ python-dotenv>=0.5.1
 # added
 yt_dlp
 huggingface_hub
+pydub
 
 openai
