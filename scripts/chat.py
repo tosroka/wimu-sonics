@@ -83,7 +83,6 @@ if __name__ == "__main__":
     while i < args.n:
         try:
             answer = ask(chat=client.chat, content=prompt)
-            i += 1
         except LimitExceeded:
             try:
                 client = next(clients)
@@ -96,5 +95,6 @@ if __name__ == "__main__":
             save_answer(answer, last_num_yue + i)
         elif args.model == "musicgen":
             save_answer_musicgen(answer, last_num_musicgen + i, musicgen_out)
+        i += 1
     
     print(last_num_yue if args.model == "yue" else last_num_musicgen)

@@ -49,6 +49,7 @@ for ((i=0; i<$#; i+=2)); do
     fi
 
     if [[ $model == "yue" ]]; then
+        echo "Wejście do '$model'"
         cd ../../YuE/inference
         conda activate py38
 
@@ -68,14 +69,16 @@ for ((i=0; i<$#; i+=2)); do
                 --prompt_start_time 0 \
                 --prompt_end_time 120
 
-            echo "Wygenerowano: '$idx'"
+            echo "Wygenerowano: '$idx' utwór i zapisano w wimu-sonics/data/examples/YuE"
         done
 
     elif [[ $model == "musicgen" ]]; then
+        echo "Wejście do '$model'"
         cd ../adiocraft
         # TODO
     fi
 
+    echo "Powrót do '$path'"
     cd "$path"
 
 done
