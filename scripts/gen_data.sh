@@ -36,12 +36,13 @@ for ((i=0; i<$#; i+=2)); do
 
     if [[ $model == "sin" ]]; then
         python3 make_sin.py "$num"
-        echo "Pomyślnie wygenerowano sinusa" >&1
+        echo "Pomyślnie wygenerowano sinusa"
         continue
     fi
 
+    echo "Generowanie promtów dla $model"
     last_num=$(python3 chat.py "$num" "$model")
-    echo "Kolejny numer od, którego będą generowane utwory: '$last_num'" >&1
+    echo "Kolejny numer od, którego będą generowane utwory: '$last_num'"
 
     if ! [[ "$last_num" =~ ^[0-9]+$ ]]; then
         echo "Błąd: chat.py nie zwrócił liczby całkowitej: '$last_num'"
@@ -49,8 +50,8 @@ for ((i=0; i<$#; i+=2)); do
     fi
 
     if [[ $model == "yue" ]]; then
-        echo "Wejście do '$model'"
         cd ../../YuE/inference
+        echo "Wejście do $model: $(pwd)"
         conda activate py38
 
         for ((j=0; j<num; j++)); do
@@ -63,18 +64,21 @@ for ((i=0; i<$#; i+=2)); do
                 --lyrics_txt ../../wimu-sonics/data/prompt_egs/lyrics/${idx}.txt \
                 --run_n_segments 4 \
                 --stage2_batch_size 4 \
-                --output_dir ../../wimu-sonics/data/examples/YuE \
+                --output_dir ../output \
                 --max_new_tokens 3000 \
                 --repetition_penalty 1.1 \
                 --prompt_start_time 0 \
                 --prompt_end_time 120
 
-            echo "Wygenerowano: '$idx' utwór i zapisano w wimu-sonics/data/examples/YuE"
+            echo "Wygenerowano: '$idx' utwór i zapisano w ../output"
         done
 
+        cp ../output/*.mp3 ../../wimu-sonics/data/examples/YuE
+        echo "Skopiowano mp3 do wimu-sonics/data/examples/YuE"
+
     elif [[ $model == "musicgen" ]]; then
-        echo "Wejście do '$model'"
         cd ../adiocraft
+        echo "Wejście do $model: $(pwd)"
         # TODO
     fi
 
