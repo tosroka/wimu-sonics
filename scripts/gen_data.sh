@@ -80,6 +80,7 @@ for ((i=0; i<$#; i+=2)); do
         cd "$path"
 
     elif [[ $model == "musicgen" ]]; then
+        source ~/miniconda3/etc/profile.d/conda.sh
         conda activate py39
         
         echo "Wejście do $model: $(pwd)"
