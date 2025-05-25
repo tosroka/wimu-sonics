@@ -36,10 +36,12 @@ for ((i=0; i<$#; i+=2)); do
 
     if [[ $model == "sin" ]]; then
         python3 make_sin.py "$num"
+        echo "Pomyślnie wygenerowano sinusa"
         continue
     fi
 
     last_num=$(python3 chat.py "$num" "$model")
+    echo "Kolejny numer od, którego będą generowane utwory: '$last_num'"
 
     if ! [[ "$last_num" =~ ^[0-9]+$ ]]; then
         echo "Błąd: chat.py nie zwrócił liczby całkowitej: '$last_num'"
@@ -65,6 +67,8 @@ for ((i=0; i<$#; i+=2)); do
                 --repetition_penalty 1.1 \
                 --prompt_start_time 0 \
                 --prompt_end_time 120
+
+            echo "Wygenerowano: '$idx'"
         done
 
     elif [[ $model == "musicgen" ]]; then
