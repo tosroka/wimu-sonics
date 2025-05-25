@@ -1,6 +1,6 @@
 from openai import OpenAI
 from openai.resources import chat
-import wimu_sonics.data.load_data as l
+import wimu_sonics.data.load_data as wimu
 from api_key import KEY, KEY2
 import os
 from argparse import ArgumentParser
@@ -23,7 +23,10 @@ Also in lyrics every chorus start with [chorus] and every verse with [verse] wit
 """,
     "musicgen": """Return a short prompt for musicgen model to generate a random song in pop genre. Return only the prompt, which is a textual description of the desired song. Don't write any other text. For example, your full response might look like 'bossa nova with soft piano and saxophone'.""",
 }
-musicgen_out = l.get_data_dir() / "musicgen"
+
+musicgen_out = wimu.get_musicgen()
+lyrics_path = wimu.get_lyrics()
+genre_path = wimu.get_genre()
 
 
 def ask(chat: chat.Chat, content: str):
@@ -39,15 +42,13 @@ def save_answer(answer: str, number_of_data: int):
     answer = answer.split("\n")
     answer = [line if line.strip() else "\n" for line in answer]
     lyrics, genre = "\n".join(answer[:-2]), answer[-1]
-    lyrics_path = l.get_lyrics()
-    genre_path = l.get_genre()
     if not os.path.exists(lyrics_path):
         os.makedirs(lyrics_path)
-    with open(lyrics_path / f"lyrics_{number_of_data}.txt", "w") as f:
+    with open(lyrics_path / f"{number_of_data}.txt", "w") as f:
         f.write(lyrics)
     if not os.path.exists(genre_path):
         os.makedirs(genre_path)
-    with open(genre_path / f"genre_{number_of_data}.txt", "w") as f:
+    with open(genre_path / f"{number_of_data}.txt", "w") as f:
         f.write(genre)
 
 
@@ -77,6 +78,8 @@ if __name__ == "__main__":
     clients = iter(clients)
     client = next(clients)
     i = 0
+    last_num_yue = wimu.get_last_number(genre_path)
+    last_num_musicgen = wimu.get_last_number(musicgen_out)
     while i < args.n:
         try:
             answer = ask(chat=client.chat, content=prompt)
@@ -88,8 +91,8 @@ if __name__ == "__main__":
                 raise RuntimeError("No more clients available")
             continue
 
-        print("Generated:", answer)
+        # print("Generated:", answer)
         if args.model == "yue":
-            save_answer(answer, i)
+            save_answer(answer, last_num_yue + i)
         elif args.model == "musicgen":
-            save_answer_musicgen(answer, i, l.get_data_dir() / "musicgen")
+            save_answer_musicgen(answer, last_num_musicgen + i, musicgen_out)
