@@ -36,7 +36,7 @@ for ((i=0; i<$#; i+=2)); do
 
     if [[ $model == "sin" ]]; then
         python3 make_sin.py "$num"
-        echo "Pomyślnie wygenerowano sinusa"
+        echo "Pomyślnie wygenerowano sinusa i zapisano ../data/examples/$model"
         continue
     fi
 
@@ -75,14 +75,18 @@ for ((i=0; i<$#; i+=2)); do
 
         cp ../output/*.mp3 ../../wimu-sonics/data/examples/YuE
         echo "Skopiowano mp3 do wimu-sonics/data/examples/YuE"
+        
+        echo "Powrót do '$path'"
+        cd "$path"
 
     elif [[ $model == "musicgen" ]]; then
-        cd ../adiocraft
+        conda activate py39
+        
         echo "Wejście do $model: $(pwd)"
-        # TODO
-    fi
 
-    echo "Powrót do '$path'"
-    cd "$path"
+        python3 gen_musicgen.py $last_num
+        
+        echo "Wygenerowano utwory z musicgen i zapisano w ../data/examples/$model"
+    fi
 
 done
