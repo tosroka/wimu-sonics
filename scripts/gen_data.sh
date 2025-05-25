@@ -36,12 +36,12 @@ for ((i=0; i<$#; i+=2)); do
 
     if [[ $model == "sin" ]]; then
         python3 make_sin.py "$num"
-        echo "Pomyślnie wygenerowano sinusa"
+        echo "Pomyślnie wygenerowano sinusa" >&1
         continue
     fi
 
     last_num=$(python3 chat.py "$num" "$model")
-    echo "Kolejny numer od, którego będą generowane utwory: '$last_num'"
+    echo "Kolejny numer od, którego będą generowane utwory: '$last_num'" >&1
 
     if ! [[ "$last_num" =~ ^[0-9]+$ ]]; then
         echo "Błąd: chat.py nie zwrócił liczby całkowitej: '$last_num'"
@@ -56,7 +56,7 @@ for ((i=0; i<$#; i+=2)); do
         for ((j=0; j<num; j++)); do
             idx=$((j + last_num))
             python infer.py \
-                --cuda_idx 1 \  # może 1 bo 0 często chyba zajęte i też domyślnie brane
+                --cuda_idx 1 \
                 --stage1_model m-a-p/YuE-s1-7B-anneal-en-icl \
                 --stage2_model m-a-p/YuE-s2-1B-general \
                 --genre_txt ../../wimu-sonics/data/prompt_egs/genre/${idx}.txt \
