@@ -32,4 +32,4 @@ if __name__ == "__main__":
     waves = model.generate(prompts)
 
     for idx, wav in enumerate(waves):
-        audio_write(musicgen_out / f'{idx}', wav.cpu(), model.sample_rate, strategy="loudness", loudness_compressor=True)
+        audio_write(musicgen_out / f'{args.n + idx}', wav.cpu(), model.sample_rate, strategy="loudness", loudness_compressor=True)
