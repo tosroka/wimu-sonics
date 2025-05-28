@@ -59,8 +59,9 @@ def get_predictions_local_hf(audio_files: list[Path]) ->list[bool]:
         chunk = get_middle_chunk(audio)
         chunk = torch.from_numpy(chunk)
         raw = model(chunk[None,:])
-        tf = torch.nn.functional.sigmoid(raw)>0.5 # if higher, then it's fake
-        predictions.append("Fake" if tf.item() else "Real")
+        pred = torch.nn.functional.sigmoid(raw) # if higher, then it's fake
+        predictions.append("Fake" if pred.item()>0.5 else "Real")
+        print(pred.item())
     return predictions
 
 def get_predictions_local_torch(audio_files: list[Path]) ->list[bool]:
@@ -85,21 +86,19 @@ def get_predictions_local_torch(audio_files: list[Path]) ->list[bool]:
         chunk = get_middle_chunk(audio)
         chunk = torch.from_numpy(chunk).to(device)
         raw = model(chunk[None,:])
-        tf = torch.nn.functional.sigmoid(raw)>0.5 # if higher, then it's fake
-        predictions.append("Fake" if tf.item() else "Real")
+        pred = torch.nn.functional.sigmoid(raw) # if higher, then it's fake
+        predictions.append("Fake" if pred.item()>0.5 else "Real")
+        print(pred.item())
     return predictions
         
-
-    
-
 def run_experiment(local):
     if not local:
         client = Client("awsaf49/sonics-fake-song-detection")
     results = {}
     with torch.no_grad():
-        for folder in Path("data/examples_16000").iterdir():
+        for folder in Path("data/examples").iterdir():
             print("running",folder.name)
-            all_audio = list(folder.glob("*.*"))[:10]
+            all_audio = list(folder.glob("*.*"))[:1]
             if local:
                 result = get_predictions_local_hf(all_audio)
             else:
