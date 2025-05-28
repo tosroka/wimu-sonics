@@ -52,6 +52,7 @@ for ((i=0; i<$#; i+=2)); do
     if [[ $model == "yue" ]]; then
         cd ../../YuE/inference
         echo "Wejście do $model: $(pwd)"
+        source ~/miniconda3/etc/profile.d/conda.sh
         conda activate py38
 
         for ((j=0; j<num; j++)); do
@@ -85,7 +86,7 @@ for ((i=0; i<$#; i+=2)); do
         
         echo "Wejście do $model: $(pwd)"
 
-        python3 gen_musicgen.py $last_num
+        python3 gen_musicgen.py $last_num | exit 1
         
         echo "Wygenerowano utwory z musicgen i zapisano w ../data/examples/$model"
     fi
