@@ -1,7 +1,7 @@
 from setuptools import find_packages, setup
 
 setup(
-    name='wimu-sonics',
+    name='wimu_sonics',
     package_dir={'': 'src'},
     packages=find_packages('src'),
     version='0.1.0',
