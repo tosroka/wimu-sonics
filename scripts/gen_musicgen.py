@@ -29,7 +29,7 @@ if __name__ == "__main__":
     model = MusicGen.get_pretrained('facebook/musicgen-melody')
     model.set_generation_params(duration=100)
 
-    waves = model.generate(prompts)
-
-    for idx, wav in enumerate(waves):
+    for idx, prompt in enumerate(prompts):
+        waves = model.generate([prompt])
+        wav = waves[0]
         audio_write(musicgen_out / f'{args.n + idx}', wav.cpu(), model.sample_rate, strategy="loudness", loudness_compressor=True)

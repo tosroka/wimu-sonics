@@ -5,6 +5,7 @@ from api_key import KEY, KEY2
 import os
 from argparse import ArgumentParser
 from pathlib import Path
+import time
 
 
 MODEL = "deepseek/deepseek-r1:free"  # free słowo kluczowe, żeby nie bulić 6/10000 $
@@ -81,6 +82,7 @@ if __name__ == "__main__":
     last_num_yue = wimu.get_last_number(genre_path)
     last_num_musicgen = wimu.get_last_number(musicgen_out)
     while i < args.n:
+        time.sleep(1)
         try:
             answer = ask(chat=client.chat, content=prompt)
         except LimitExceeded:
