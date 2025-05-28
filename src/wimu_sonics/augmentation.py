@@ -9,8 +9,11 @@ import subprocess
 from typing import Literal
 
 def load_audio(audio):
-    y, sr = librosa.load(audio, sr=None)
+    y, sr = librosa.load(audio, sr=16000)
     return y, sr
+
+def no_augment(audio, sample_rate):
+    return audio
 
 def apply_frequency_masking(audio, sample_rate):
     augmenter = Compose([
@@ -48,7 +51,7 @@ def apply_volume_increase(audio, sample_rate, min_gain_in_db=6.0, max_gain_in_db
 
 def apply_speed_increase(audio, sample_rate, min_rate=1.1, max_rate=1.3):
     augmenter = Compose([
-        TimeStretch(min_rate=min_rate, max_rate=max_rate, p=1.0)
+        TimeStretch(min_rate=min_rate, max_rate=max_rate, p=1.0, leave_length_unchanged=False)
     ])
     augmented = augmenter(samples=audio, sample_rate=sample_rate)
     return augmented
@@ -223,3 +226,30 @@ def compress_audio_ffmpeg(input_path: str, output_path: str,
         output_path
     ]
     subprocess.run(cmd, check=True)
+
+augumentation_methods = {
+    f.__qualname__: f for f in [
+        apply_frequency_masking,
+        apply_time_masking,
+        apply_mixup,
+        apply_volume_increase,
+        apply_speed_increase,
+        apply_pitch_shift,
+        apply_white_noise,
+        apply_tanh_distortion,
+        apply_band_pass_filter,
+        apply_bit_crush,
+        apply_vibrato,
+        apply_reverb,
+        apply_short_noise,
+        apply_aliasing,
+        apply_gain_transition,
+        apply_high_pass_filter,
+        apply_low_pass_filter,
+        apply_high_shelf_filter,
+        apply_low_shelf_filter,
+        apply_limiter,
+        apply_mp3_compression,
+        no_augment
+    ]
+}
