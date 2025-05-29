@@ -5,7 +5,7 @@ import wimu_sonics.data.load_data as wimu
 import os
 
 
-sin_out = wimu.get_data_dir() / 'sin'
+sin_out = wimu.get_data_dir() / 'examples' / 'sin'
 
 
 if __name__ == "__main__":
