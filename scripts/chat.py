@@ -17,10 +17,10 @@ class LimitExceeded(Exception):
 
 
 model_prompts = {
-    "yue": """Please can you generate lyrics and key words which will describe songs lyrics?\
-Every lyrics should have at least 2 verses and 2 choruses (after verse should be chorus). Key words should describe for example\
-genre, instrument, mood, gender, timbre and etc. Can you give answer like '[lyrics] empty line [key words in 1 line without ,]'?\
-Also in lyrics every chorus start with [chorus] and every verse with [verse] without any number next to it.
+    "yue": """Generate lyrics and key words which will describe song. \
+Every lyrics should have AT LEAST 2 verses and 2 choruses. After verse must be chorus and also there can be more verses and choruses. Key words should describe for example\
+genre, instrument, mood, gender, timbre and etc - written in one line without any ',' at the end of your answer. Can you give answer like '[verse] [chorus] [verse] [chorus]... empty line [key words]'?\
+Also in lyrics every chorus start with [chorus] ends with empty line and every verse start with [verse] ends with empty line without any number next to it.
 """,
     "musicgen": """Return a short prompt for musicgen model to generate a random song in pop genre. Return only the prompt, which is a textual description of the desired song. Don't write any other text. For example, your full response might look like 'bossa nova with soft piano and saxophone'.""",
 }
