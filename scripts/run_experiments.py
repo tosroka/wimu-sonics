@@ -1,10 +1,10 @@
 """Based on input yaml file, run experiments with different augmentations and save results."""
 from wimu_sonics.dataset import FakeAudioDataset
+from wimu_sonics.seed_all import seedEverything
 import yaml
-import sys
 import make_predictions
 import argparse
-from wimu_sonics.augmentation import augmentation_methods, load_audio
+from wimu_sonics.augmentation import augmentation_methods
 from wimu_sonics.special_augmentation import special_augmentation_methods
 from pathlib import Path
 import pandas as pd
@@ -55,7 +55,7 @@ def augment_and_predict_notemp(dataset, aug_function, params, experiment_name: s
 #         prediction = make_predictions.get_predictions_local(audio_dataset)
 #         return prediction
 
-def run_experiments(config_path):
+def run_experiments(config_path, start_idx):
     config = load_config(config_path)
     datasets = find_datasets(DATASETS)
     for dataset in datasets:
@@ -63,7 +63,7 @@ def run_experiments(config_path):
     
     print("")
     print("Loaded configuration:")
-    for aug in config['augmentations']:
+    for aug in config['augmentations'][start_idx:]:
         print(aug)
         print(aug["name"], aug["aug_function"], aug["params"])
         f = augmentation_methods[aug["aug_function"]]
@@ -78,6 +78,10 @@ def run_experiments(config_path):
         padded_data = {k: v + [None] * (max_len - len(v)) for k, v in all_datasets.items()}
         df = pd.DataFrame(padded_data)
         print(df)
+        temp = (df > 0.5).sum(axis=0)
+        temp['real']=df.shape[0]-temp['real']
+        print("correct predictions:")
+        print(temp)
         output_file = Path("results") / f"{aug['name']}_results.csv"
         df.to_csv(output_file, index=False)
 
@@ -85,7 +89,12 @@ def run_experiments(config_path):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Run experiments with different audio augmentations.")
     parser.add_argument('config_path', type=str, nargs='?', default="configs/paper.yaml", help='Path to the YAML configuration file.')
+    parser.add_argument('--start_idx', type=int, required=False, default=0, help='Index of augmentation inside config to start at.')
+    parser.add_argument('--seed', type=int, required=False, default=None, help='Random seed.')
     args = parser.parse_args()
 
-    run_experiments(args.config_path)
+    if args.seed:
+        seedEverything(args.seed)
+
+    run_experiments(args.config_path, args.start_idx)
     

@@ -1,0 +1,20 @@
+config:
+  inference_type: "local_hf"
+augmentations:
+    - name: overwrite_with_fake_spectrogram
+      aug_function: replace_spectrogram
+      params:
+        band_start: 5000
+        band_stop: 8000
+        sample_rate: 16000
+        source_audio: data/examples/suno/Fingers on the Keys.mp3
+    - name: overwrite_with_real_spectrogram
+      aug_function: replace_spectrogram
+      params:
+        band_start: 5000
+        band_stop: 8000
+        sample_rate: 16000
+        source_audio: data/examples/real/Eminem - Without Me (Official Music Video).mp3
+    - name: no_augment
+      aug_function: no_augment
+      params: # nothing
