@@ -8,20 +8,22 @@ from scipy.signal import fftconvolve
 import subprocess
 from typing import Literal
 
-def load_audio(audio):
-    y, sr = librosa.load(audio, sr=16000)
+def load_audio(audio, sr=16000):
+    y, sr = librosa.load(audio, sr=sr)
     return y, sr
 
-def no_augment(audio, sample_rate):
+def no_augment(audio):
     return audio
 
-def apply_frequency_masking(audio, sample_rate):
+def apply_frequency_masking(audio, sample_rate, center_freq, bandwidth_fraction, rolloff=6):
     augmenter = Compose([
         BandStopFilter(
-            min_center_freq=200.0,
-            max_center_freq=4000.0,
-            min_bandwidth_fraction=0.5,
-            max_bandwidth_fraction=1.99,
+            min_center_freq=center_freq,
+            max_center_freq=center_freq,
+            min_bandwidth_fraction=bandwidth_fraction,
+            max_bandwidth_fraction=bandwidth_fraction,
+            min_rolloff=rolloff,
+            max_rolloff=rolloff,
             p=1.0
         )
     ])
@@ -49,9 +51,9 @@ def apply_volume_increase(audio, sample_rate, min_gain_in_db=6.0, max_gain_in_db
     augmented = augmenter(samples=audio, sample_rate=sample_rate)
     return augmented
 
-def apply_speed_increase(audio, sample_rate, min_rate=1.1, max_rate=1.3):
+def apply_speed_increase(audio, sample_rate, rate):
     augmenter = Compose([
-        TimeStretch(min_rate=min_rate, max_rate=max_rate, p=1.0, leave_length_unchanged=False)
+        TimeStretch(min_rate=rate, max_rate=rate, p=1.0, leave_length_unchanged=False)
     ])
     augmented = augmenter(samples=audio, sample_rate=sample_rate)
     return augmented
@@ -227,7 +229,7 @@ def compress_audio_ffmpeg(input_path: str, output_path: str,
     ]
     subprocess.run(cmd, check=True)
 
-augumentation_methods = {
+augmentation_methods = {
     f.__qualname__: f for f in [
         apply_frequency_masking,
         apply_time_masking,
