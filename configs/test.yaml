@@ -1,0 +1,7 @@
+config:
+  inference_type: "local_hf"
+augmentations:
+    - name: compress_ogg
+      aug_function: compress_audio_codec
+      params:
+        codec: ogg
