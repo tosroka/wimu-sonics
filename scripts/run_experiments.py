@@ -26,10 +26,12 @@ def find_datasets(base_path: Path):
             datasets.append(dataset)
     return datasets
 
-def augment_and_predict_notemp(dataset, aug_function, params, experiment_name: str):
+def augment_and_predict_notemp(dataset, aug_function, params, experiment_name: str, write_to_disk=True):
     if not params:
         params = {}
-    fake_dataset = FakeAudioDataset(dataset, aug_function=aug_function, params=params, max_len=16000*model_time, save_to=Path(f"results/{experiment_name}"))
+    save_path = Path(f"results/{experiment_name}") if write_to_disk else None 
+    fake_dataset = FakeAudioDataset(dataset, aug_function=aug_function, params=params, max_len=16000*model_time, save_to=save_path)
+
     prediction = make_predictions.get_predictions_local(fake_dataset)
     return prediction
 
@@ -55,7 +57,7 @@ def augment_and_predict_notemp(dataset, aug_function, params, experiment_name: s
 #         prediction = make_predictions.get_predictions_local(audio_dataset)
 #         return prediction
 
-def run_experiments(config_path, start_idx):
+def run_experiments(config_path, start_idx, write_to_disk=True):
     config = load_config(config_path)
     datasets = find_datasets(DATASETS)
     for dataset in datasets:
@@ -73,7 +75,7 @@ def run_experiments(config_path, start_idx):
         all_datasets = {}
         for dataset in datasets:
             print(f"Running {aug['name']} on dataset {dataset.name}")
-            dataset_preds = augment_and_predict_notemp(dataset, f, params, aug["name"])
+            dataset_preds = augment_and_predict_notemp(dataset, f, params, aug["name"], write_to_disk=write_to_disk)
             all_datasets[dataset.name] = dataset_preds
         # fix uneven 
         max_len = max(len(v) for v in all_datasets.values())
@@ -93,10 +95,10 @@ if __name__ == "__main__":
     parser.add_argument('config_path', type=str, nargs='?', default="configs/paper.yaml", help='Path to the YAML configuration file.')
     parser.add_argument('--start_idx', type=int, required=False, default=0, help='Index of augmentation inside config to start at.')
     parser.add_argument('--seed', type=int, required=False, default=None, help='Random seed.')
+    parser.add_argument('--save_datasets', type=bool, required=False, default=True, action=argparse.BooleanOptionalAction, help='Whether to save augmented datasets.')
     args = parser.parse_args()
 
     if args.seed:
         seedEverything(args.seed)
 
-    run_experiments(args.config_path, args.start_idx)
-    
+    run_experiments(args.config_path, args.start_idx, args.save_datasets)
