@@ -6,7 +6,7 @@ import pandas as pd
 from sonics.utils.dataset import AudioDataset
 
 # TODO: load only if local inference
-model = HFAudioClassifier.from_pretrained("awsaf49/sonics-spectttra-alpha-120s")
+# model = HFAudioClassifier.from_pretrained("awsaf49/sonics-spectttra-alpha-120s")
 
 def get_predictions_hf(audio_files, client: Client):
     
@@ -24,9 +24,10 @@ def get_predictions_hf(audio_files, client: Client):
 def get_predictions_local(audio_files) ->list[bool]:
     predictions = []
     for audio in audio_files:
-        raw = model(audio["audio"][None,:])
-        tf = torch.nn.functional.sigmoid(raw) # >0.5 if higher, then it's fake
-        predictions.append(tf.item())
+        print(audio)
+        # raw = model(audio["audio"][None,:])
+        # tf = torch.nn.functional.sigmoid(raw) # >0.5 if higher, then it's fake
+        # predictions.append(tf.item())
     return predictions
 
 def run_experiment(local):
@@ -48,3 +49,7 @@ def run_experiment(local):
     df = pd.DataFrame(results)
     print("True if fake")
     return df
+
+
+if __name__ == "__main__":
+    run_experiment(None)

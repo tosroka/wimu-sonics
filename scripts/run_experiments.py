@@ -60,6 +60,8 @@ def run_experiments(config_path, start_idx):
     datasets = find_datasets(DATASETS)
     for dataset in datasets:
         print("Found dataset:", dataset.name, len(list(dataset.glob("*.*"))), "files")
+        # for file in list(dataset.glob("*.*")):
+        #     print(file)
     
     print("")
     print("Loaded configuration:")
