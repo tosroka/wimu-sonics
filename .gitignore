@@ -89,3 +89,4 @@ target/
 .mypy_cache/
 
 scripts/api_key.py
+masked
