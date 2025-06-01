@@ -13,7 +13,7 @@ git clone https://github.com/awsaf49/sonics
 pip3 install .
 pip3 install ./sonics
 ```
-3. run:
+3. Run:
 ```sh
 python scripts/run_experiments.py configs/paper.yaml
 python scripts/run_experiments.py configs/paper_randoms.yaml
@@ -26,3 +26,7 @@ Output is stored in `results`, all augmented datasets are also saved as well (~3
 ```sh
 python3 reports/make_augmentations_heatmap.py
 ```
+
+## Expanding the dataset
+
+You can place new datasets directly in the `examples` directory. To generate more songs, you can use `scripts/chat.py` to use DeepSeek's api to generate prompts for YuE and musicgen. You can then run `gen_musicgen.py` to generate and save the new songs, or use a local YuE installation with respective set of generated prompts.
