@@ -221,7 +221,7 @@ Project Organization
     ├── Makefile            <- Makefile with commands like `make data` or `make train`
     ├── README.md           <- The top-level README for individuals using this project
     ├── data
-    │   ├── examples        <- Prepared dataset from Suno, Udio, YuE and MusicGen
+    │   └── examples        <- Prepared dataset from Suno, Udio, YuE and MusicGen
     │
     ├── notebooks           <- Jupyter notebooks. 
     │
