@@ -381,23 +381,23 @@ augmentations:
       params:
         target_sample_rate: 6000
 
-    - name: mp3_compression64
+    - name: mp3_compression_64
       aug_function: apply_mp3_compression
       params:
         bitrate: 64
-    - name: mp3_compression40
+    - name: mp3_compression_40
       aug_function: apply_mp3_compression
       params:
         bitrate: 40
-    - name: mp3_compression32
+    - name: mp3_compression_32
       aug_function: apply_mp3_compression
       params:
         bitrate: 32
-    - name: mp3_compression24
+    - name: mp3_compression_24
       aug_function: apply_mp3_compression
       params:
         bitrate: 24
-    - name: mp3_compression16
+    - name: mp3_compression_16
       aug_function: apply_mp3_compression
       params:
         bitrate: 16
