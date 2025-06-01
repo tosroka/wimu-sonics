@@ -2,10 +2,10 @@ import numpy as np
 import scipy.signal
 from wimu_sonics.augmentation import load_audio
 
-def replace_spectrogram(x: np.ndarray, source_audio: str, sample_rate: float, band_start: float, band_stop: float, n_fft=2048, hop_length=512):
+def replace_spectrogram(x: np.ndarray, source_audio_path: str, sample_rate: int, band_start: float, band_stop: float, n_fft=2048, hop_length=512):
     """Replace a frequency band in the spectrogram of `x` with the corresponding band from `source_audio`."""
     # stft
-    source_audio, sr = load_audio(source_audio,sr=sample_rate)
+    source_audio, sr = load_audio(source_audio_path,sr=sample_rate)
     f, t, Zxx_x = scipy.signal.stft(x, fs=sr, nperseg=n_fft, noverlap=n_fft - hop_length)
     _, _, Zxx_source = scipy.signal.stft(source_audio, fs=sr, nperseg=n_fft, noverlap=n_fft - hop_length)
 
