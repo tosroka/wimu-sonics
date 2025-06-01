@@ -10,7 +10,7 @@ To evaluate model generalization, we constructed a dataset consisting of both re
 2. Setting up the environment: run the following commands (using venv is recommended)
 ```sh
 git clone https://github.com/awsaf49/sonics
-pip3 install .
+pip3 install -e .
 pip3 install ./sonics
 ```
 3. Run:
@@ -29,4 +29,9 @@ python3 reports/make_augmentations_heatmap.py
 
 ## Expanding the dataset
 
-You can place new datasets directly in the `examples` directory. To generate more songs, you can use `scripts/chat.py` to use DeepSeek's api to generate prompts for YuE and musicgen. You can then run `gen_musicgen.py` to generate and save the new songs, or use a local YuE installation with respective set of generated prompts.
+You can place new datasets directly in the `examples` directory. To generate more songs, you can enter scripts and run from this directory
+```sh
+cd scripts
+./gen_data.sh <model1> <number1 <model2> <number2>
+```
+where `model` is yue or musicgen and `number` is the number of new songs to generate. Before doing this, make sure [yue](https://github.com/multimodal-art-projection/YuE) is installed correctly in parallel to `<project root>` and [musicgen](https://github.com/facebookresearch/audiocraft).
