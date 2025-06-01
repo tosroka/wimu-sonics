@@ -3,16 +3,17 @@ import numpy as np
 import soundfile as sf
 from audiomentations import Compose, BandStopFilter, TimeMask, AddGaussianNoise, TanhDistortion, BandPassFilter, BitCrush, \
                             Gain, PitchShift, TimeStretch, AddShortNoises, PolarityInversion, Aliasing, GainTransition, \
-                            HighPassFilter, LowPassFilter, HighShelfFilter, LowShelfFilter, Limiter, Mp3Compression
+                            HighPassFilter, LowPassFilter, HighShelfFilter, LowShelfFilter, Limiter, Mp3Compression, SevenBandParametricEQ
 from scipy.signal import fftconvolve
-import subprocess
 from typing import Literal
+import io
+import subprocess
 
 def load_audio(audio, sr=16000):
     y, sr = librosa.load(audio, sr=sr)
     return y, sr
 
-def no_augment(audio):
+def no_augment(audio, sample_rate):
     return audio
 
 def apply_frequency_masking(audio, sample_rate, center_freq, bandwidth_fraction, rolloff=6):
@@ -30,9 +31,9 @@ def apply_frequency_masking(audio, sample_rate, center_freq, bandwidth_fraction,
     augmented = augmenter(samples=audio, sample_rate=sample_rate)
     return augmented
 
-def apply_time_masking(audio, sample_rate):
+def apply_time_masking(audio, sample_rate, min_band_part, max_band_part):
     augmenter = Compose([
-        TimeMask(min_band_part=0.05, max_band_part=0.2, p=1.0)
+        TimeMask(min_band_part=min_band_part, max_band_part=max_band_part, fade_duration=0.1, p=1.0)
     ])
     augmented = augmenter(samples=audio, sample_rate=sample_rate)
     return augmented
@@ -44,9 +45,9 @@ def apply_mixup(audio1, audio2, proportion=0.5):
     mixed_audio = proportion * audio1 + (1 - proportion) * audio2
     return mixed_audio
 
-def apply_volume_increase(audio, sample_rate, min_gain_in_db=6.0, max_gain_in_db=6.0):
+def apply_volume_increase(audio, sample_rate, db_gain):
     augmenter = Compose([
-        Gain(min_gain_in_db=min_gain_in_db, max_gain_in_db=max_gain_in_db, p=1.0)
+        Gain(min_gain_db=db_gain, max_gain_db=db_gain, p=1.0)
     ])
     augmented = augmenter(samples=audio, sample_rate=sample_rate)
     return augmented
@@ -58,16 +59,16 @@ def apply_speed_increase(audio, sample_rate, rate):
     augmented = augmenter(samples=audio, sample_rate=sample_rate)
     return augmented
 
-def apply_pitch_shift(audio, sample_rate, min_semitones=-4, max_semitones=4):
+def apply_pitch_shift(audio, sample_rate, semitones):
     augmenter = Compose([
-        PitchShift(min_semitones=min_semitones, max_semitones=max_semitones, p=1.0)
+        PitchShift(min_semitones=semitones, max_semitones=semitones, p=1.0)
     ])
     augmented = augmenter(samples=audio, sample_rate=sample_rate)
     return augmented
 
-def apply_white_noise(audio, sample_rate, min_amplitude=0.001, max_amplitude=0.015):
+def apply_white_noise(audio, sample_rate, amplitude):
     augmenter = Compose([
-        AddGaussianNoise(min_amplitude=min_amplitude, max_amplitude=max_amplitude, p=1.0),
+        AddGaussianNoise(min_amplitude=amplitude, max_amplitude=amplitude, p=1.0),
     ])
     augmented_audio = augmenter(samples=audio, sample_rate=sample_rate)
     return augmented_audio
@@ -90,9 +91,9 @@ def apply_band_pass_filter(audio, sample_rate, min_center_freq=100.0, max_center
     augmented_sound = augmenter(samples=audio, sample_rate=sample_rate)
     return augmented_sound
 
-def apply_bit_crush(audio, sample_rate, min_bit_depth=5, max_bit_depth=14, p=1.0):
+def apply_bit_crush(audio, sample_rate, bit_depth, p=1.0):
     augmenter = Compose([
-        BitCrush(min_bit_depth=min_bit_depth, max_bit_depth=max_bit_depth, p=p)
+        BitCrush(min_bit_depth=bit_depth, max_bit_depth=bit_depth, p=p)
     ])
     augmented_sound = augmenter(samples=audio, sample_rate=sample_rate)
     return augmented_sound
@@ -135,14 +136,12 @@ def apply_short_noise(audio, sample_rate, noise_folder_path, min_snr_db=3.0, max
     return augmented_sound
 
 
-def apply_aliasing(audio, sample_rate, min_sample_rate=8000, max_sample_rate=30000, p=1.0):
+def apply_aliasing(audio, sample_rate, target_sample_rate):
     augmenter = Compose([
-        Aliasing(min_sample_rate=min_sample_rate, max_sample_rate=max_sample_rate, p=p)
+        Aliasing(min_sample_rate=target_sample_rate, max_sample_rate=target_sample_rate, p=1)
     ])
     augmented_sound = augmenter(samples=audio, sample_rate=sample_rate)
     return augmented_sound
-
-
 
 def apply_gain_transition(audio, sample_rate, min_gain_db=-6.0, max_gain_db=6.0, p=1.0):
     augmenter = Compose([
@@ -152,19 +151,20 @@ def apply_gain_transition(audio, sample_rate, min_gain_db=-6.0, max_gain_db=6.0,
     return augmented_sound
 
 
-def apply_high_pass_filter(audio, sample_rate, min_cutoff_freq=100.0, max_cutoff_freq=800.0, p=1.0):
+def apply_high_pass_filter(audio, sample_rate, cutoff_freq):
     augmenter = Compose([
-        HighPassFilter(min_cutoff_freq=min_cutoff_freq, max_cutoff_freq=max_cutoff_freq, p=p)
+        HighPassFilter(min_cutoff_freq=cutoff_freq, max_cutoff_freq=cutoff_freq, p=1)
     ])
     augmented_sound = augmenter(samples=audio, sample_rate=sample_rate)
     return augmented_sound
 
-def apply_low_pass_filter(audio, sample_rate, min_cutoff_freq=300.0, max_cutoff_freq=3000.0, p=1.0):
+def apply_low_pass_filter(audio, sample_rate, cutoff_freq):
     augmenter = Compose([
-        LowPassFilter(min_cutoff_freq=min_cutoff_freq, max_cutoff_freq=max_cutoff_freq, p=p)
+        LowPassFilter(min_cutoff_freq=cutoff_freq, max_cutoff_freq=cutoff_freq, p=1)
     ])
     augmented_sound = augmenter(samples=audio, sample_rate=sample_rate)
     return augmented_sound
+
 def apply_high_shelf_filter(audio, sample_rate, min_gain_db=-12.0, max_gain_db=12.0, min_cutoff_freq=3000.0, max_cutoff_freq=6000.0, p=1.0):
     augmenter = Compose([
         HighShelfFilter(
@@ -198,36 +198,86 @@ def apply_limiter(audio, sample_rate, threshold_db=-1.0, p=1.0):
     augmented_sound = augmenter(samples=audio, sample_rate=sample_rate)
     return augmented_sound
 
-def apply_mp3_compression(audio, sample_rate, min_bitrate=8, max_bitrate=64, p=1.0):
+def apply_mp3_compression(audio, sample_rate, bitrate=8):
     augmenter = Compose([
-        Mp3Compression(min_bitrate=min_bitrate, max_bitrate=max_bitrate, p=p)
+        Mp3Compression(min_bitrate=bitrate, max_bitrate=bitrate, p=1)
     ])
     augmented_audio = augmenter(samples=audio, sample_rate=sample_rate)
     return augmented_audio
 
-
-def save_to_audio(wave, sample_rate, filename):
-    sf.write(filename, wave, sr=sample_rate)
-
+def apply_EQ(audio, sample_rate, db_gain):
+    augmenter = Compose([
+        SevenBandParametricEQ(db_gain, db_gain,p=1)
+    ])
+    augmented_audio = augmenter(samples=audio, sample_rate=sample_rate)
+    return augmented_audio
 
 # Compression
 
+def decompress_ogg_to_audio(ogg_data: np.ndarray) -> tuple[np.ndarray, int]:
+    """
+    Decompress OGG (Vorbis) binary data to NumPy waveform and sample rate.
 
-def compress_audio_ffmpeg(input_path: str, output_path: str,
+    Args:
+        ogg_data (np.ndarray): Compressed audio in OGG format as uint8 array
+
+    Returns:
+        tuple: (audio waveform as np.ndarray, sample rate)
+    """
+    process = subprocess.run(
+        ['ffmpeg', '-i', 'pipe:0', '-f', 'wav', 'pipe:1'],
+        input=ogg_data.tobytes(),
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        check=True
+    )
+    wav_data = io.BytesIO(process.stdout)
+    audio, sr = sf.read(wav_data)
+    return audio
+
+# TODO: ONLY OGG BECAUSE BROKEN
+def compress_audio_codec(audio: np.ndarray, sample_rate: int,
     codec: Literal[
-    "mp3",
-    # "aac", # Przynajmniej mi działa tylko mp3 a pozostałe tworzą puste pliki
-    # "g723_1",
-    # "mp2",
-    # "opus",
+        "mp3",
+        "aac",
+        "g723_1",
+        "mp2",
+        "opus",
+        "vorbis",
     ] = "mp3"
     ):
-    cmd = [
-        "ffmpeg", "-y", "-i", input_path,
-        "-c:a", codec,
-        output_path
+
+    raw_audio = io.BytesIO()
+    sf.write(raw_audio, audio, sample_rate, format='WAV')
+    raw_audio.seek(0)
+
+    # Step 2: Call ffmpeg subprocess to compress to OGG
+    ffmpeg_cmd = [
+        'ffmpeg',
+        '-y',                # Overwrite output if needed
+        '-i', 'pipe:0',      # Input from stdin
+        '-f', codec,         # Output format
+        '-acodec', 'libvorbis',  # Use Vorbis codec
+        'pipe:1'             # Output to stdout
     ]
-    subprocess.run(cmd, check=True)
+
+    try:
+        result = subprocess.run(
+            ffmpeg_cmd,
+            input=raw_audio.read(),
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            check=True
+        )
+    except subprocess.CalledProcessError as e:
+        print("FFmpeg error:", e.stderr.decode())
+        raise
+
+    # Step 3: Convert output to numpy array
+    ogg_bytes = result.stdout
+    compressed = np.frombuffer(ogg_bytes, dtype=np.uint8)
+    return decompress_ogg_to_audio(ogg_data=compressed)
+
 
 augmentation_methods = {
     f.__qualname__: f for f in [
@@ -252,6 +302,8 @@ augmentation_methods = {
         apply_low_shelf_filter,
         apply_limiter,
         apply_mp3_compression,
+        apply_EQ,
+        compress_audio_codec,
         no_augment
     ]
 }

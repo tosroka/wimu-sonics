@@ -60,7 +60,7 @@ class FakeAudioDataset:
             files = list(files)[:self.limit_files]
         for audio_file in files:
             audio, sample_rate = load_audio(audio_file)
-            augmented_audio = self.aug_function(audio, **self.params)
+            augmented_audio = self.aug_function(audio, sample_rate, **self.params)
             if self.max_len is not None:
                 augmented_audio = FakeAudioDataset.crop_or_pad(augmented_audio, self.max_len, random_sampling=False)
             if self.save_to:

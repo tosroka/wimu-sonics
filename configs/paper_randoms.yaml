@@ -1,0 +1,24 @@
+# augmentations with random params, might be a good idea to take aan average
+config:
+  inference_type: "local_hf"
+augmentations:
+    - name: time_mask_15percent
+      aug_function: apply_time_masking
+      params:
+        min_band_part: 0.15
+        max_band_part: 0.15
+    - name: time_mask_50percent
+      aug_function: apply_time_masking
+      params:
+        min_band_part: 0.5
+        max_band_part: 0.5
+    - name: time_mask_30percent
+      aug_function: apply_time_masking
+      params:
+        min_band_part: 0.30
+        max_band_part: 0.30
+    
+    - name: EQ
+      aug_function: apply_EQ
+      params:
+        db_gain: 6

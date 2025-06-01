@@ -1,0 +1,408 @@
+config:
+  inference_type: "local_hf"
+augmentations:
+    - name: mask_10hz
+      aug_function: apply_frequency_masking
+      params:
+        center_freq: 10
+        bandwidth_fraction: 1
+    - name: mask_20hz
+      aug_function: apply_frequency_masking
+      params:
+        center_freq: 20
+        bandwidth_fraction: 1
+    - name: mask_40hz
+      aug_function: apply_frequency_masking
+      params:
+        center_freq: 40
+        bandwidth_fraction: 1
+    - name: mask_60hz
+      aug_function: apply_frequency_masking
+      params:
+        center_freq: 60
+        bandwidth_fraction: 1
+    - name: mask_80hz
+      aug_function: apply_frequency_masking
+      params:
+        center_freq: 80
+        bandwidth_fraction: 1
+    - name: mask_100hz
+      aug_function: apply_frequency_masking
+      params:
+        center_freq: 100
+        bandwidth_fraction: 1
+    - name: mask_200hz
+      aug_function: apply_frequency_masking
+      params:
+        center_freq: 200
+        bandwidth_fraction: 1
+    - name: mask_400hz
+      aug_function: apply_frequency_masking
+      params:
+        center_freq: 400
+        bandwidth_fraction: 1
+    - name: mask_600hz
+      aug_function: apply_frequency_masking
+      params:
+        center_freq: 600
+        bandwidth_fraction: 1
+    - name: mask_800hz
+      aug_function: apply_frequency_masking
+      params:
+        center_freq: 800
+        bandwidth_fraction: 1
+    - name: mask_1000hz
+      aug_function: apply_frequency_masking
+      params:
+        center_freq: 1000
+        bandwidth_fraction: 1
+    - name: mask_2000hz
+      aug_function: apply_frequency_masking
+      params:
+        center_freq: 2000
+        bandwidth_fraction: 1
+    - name: mask_4000hz
+      aug_function: apply_frequency_masking
+      params:
+        center_freq: 4000
+        bandwidth_fraction: 1
+    - name: mask_6000hz
+      aug_function: apply_frequency_masking
+      params:
+        center_freq: 6000
+        bandwidth_fraction: 1
+    - name: mask_8000hz
+      aug_function: apply_frequency_masking
+      params:
+        center_freq: 8000
+        bandwidth_fraction: 1
+    - name: mask_10000hz
+      aug_function: apply_frequency_masking
+      params:
+        center_freq: 10000
+        bandwidth_fraction: 1
+    - name: mask_20000hz
+      aug_function: apply_frequency_masking
+      params:
+        center_freq: 15000
+        bandwidth_fraction: 1
+
+    - name: no_augment
+      aug_function: no_augment
+      params: # nothing
+
+    - name: speed_105percent
+      aug_function: apply_speed_increase
+      params:
+        rate: 1.05
+    - name: speed_110percent
+      aug_function: apply_speed_increase
+      params:
+        rate: 1.1
+    - name: speed_120percent
+      aug_function: apply_speed_increase
+      params:
+        rate: 1.2
+    - name: speed_150percent
+      aug_function: apply_speed_increase
+      params:
+        rate: 1.5
+    - name: speed_200percent
+      aug_function: apply_speed_increase
+      params:
+        rate: 2
+    - name: speed_300percent
+      aug_function: apply_speed_increase
+      params:
+        rate: 3
+    - name: speed_90percent
+      aug_function: apply_speed_increase
+      params:
+        rate: 0.9
+    - name: speed_75percent
+      aug_function: apply_speed_increase
+      params:
+        rate: 0.75
+    - name: speed_50percent
+      aug_function: apply_speed_increase
+      params:
+        rate: 0.5
+
+    - name: volume_6db
+      aug_function: apply_volume_increase
+      params:
+        db_gain: 6
+    - name: volume_12db
+      aug_function: apply_volume_increase
+      params:
+        db_gain: 12
+    - name: volume_18db
+      aug_function: apply_volume_increase
+      params:
+        db_gain: 18
+    - name: volume_24db
+      aug_function: apply_volume_increase
+      params:
+        db_gain: 24
+    - name: volume_-6db
+      aug_function: apply_volume_increase
+      params:
+        db_gain: -6
+    - name: volume_-12db
+      aug_function: apply_volume_increase
+      params:
+        db_gain: -12
+    - name: volume_-18db
+      aug_function: apply_volume_increase
+      params:
+        db_gain: -18
+    - name: volume_-24db
+      aug_function: apply_volume_increase
+      params:
+        db_gain: -24
+
+    - name: pitch_shift_1sm
+      aug_function: apply_pitch_shift
+      params:
+        semitones: 1
+    - name: pitch_shift_2sm
+      aug_function: apply_pitch_shift
+      params:
+        semitones: 2
+    - name: pitch_shift_4sm
+      aug_function: apply_pitch_shift
+      params:
+        semitones: 4
+    - name: pitch_shift_6sm
+      aug_function: apply_pitch_shift
+      params:
+        semitones: 6
+    - name: pitch_shift_8sm
+      aug_function: apply_pitch_shift
+      params:
+        semitones: 8
+    - name: pitch_shift_-1sm
+      aug_function: apply_pitch_shift
+      params:
+        semitones: -1
+    - name: pitch_shift_-2sm
+      aug_function: apply_pitch_shift
+      params:
+        semitones: -2
+    - name: pitch_shift_-4sm
+      aug_function: apply_pitch_shift
+      params:
+        semitones: -4
+    - name: pitch_shift_-6sm
+      aug_function: apply_pitch_shift
+      params:
+        semitones: -6
+    - name: pitch_shift_-8sm
+      aug_function: apply_pitch_shift
+      params:
+        semitones: -8
+
+    - name: white_noise_0.005
+      aug_function: apply_white_noise
+      params:
+        amplitude: 0.005
+    - name: white_noise_0.01
+      aug_function: apply_white_noise
+      params:
+        amplitude: 0.01
+    - name: white_noise_0.02
+      aug_function: apply_white_noise
+      params:
+        amplitude: 0.02
+    - name: white_noise_0.05
+      aug_function: apply_white_noise
+      params:
+        amplitude: 0.05
+    - name: white_noise_0.1
+      aug_function: apply_white_noise
+      params:
+        amplitude: 0.1
+    - name: white_noise_0.2
+      aug_function: apply_white_noise
+      params:
+        amplitude: 0.2
+    
+    - name: bit_crush_10
+      aug_function: apply_bit_crush
+      params:
+        bit_depth: 10
+    - name: bit_crush_8
+      aug_function: apply_bit_crush
+      params:
+        bit_depth: 8
+    - name: bit_crush_6
+      aug_function: apply_bit_crush
+      params:
+        bit_depth: 6
+    - name: bit_crush_4
+      aug_function: apply_bit_crush
+      params:
+        bit_depth: 4
+    - name: bit_crush_2
+      aug_function: apply_bit_crush
+      params:
+        bit_depth: 2
+
+    - name: vibrato_4_0005
+      aug_function: apply_vibrato
+      params:
+        vibrato_freq: 4
+        vibrato_magnitude: 0.0005
+    - name: vibrato_8_0005
+      aug_function: apply_vibrato
+      params:
+        vibrato_freq: 8
+        vibrato_magnitude: 0.0005
+    - name: vibrato_16_0005
+      aug_function: apply_vibrato
+      params:
+        vibrato_freq: 16
+        vibrato_magnitude: 0.0005
+    - name: vibrato_4_001
+      aug_function: apply_vibrato
+      params:
+        vibrato_freq: 4
+        vibrato_magnitude: 0.001
+    - name: vibrato_8_001
+      aug_function: apply_vibrato
+      params:
+        vibrato_freq: 8
+        vibrato_magnitude: 0.001
+    - name: vibrato_16_001
+      aug_function: apply_vibrato
+      params:
+        vibrato_freq: 16
+        vibrato_magnitude: 0.001
+
+    - name: reverb_05decay_10delay
+      aug_function: apply_reverb
+      params:
+        reverb_decay: 0.5
+        reverb_delay_ms: 10
+    - name: reverb_05decay_25delay
+      aug_function: apply_reverb
+      params:
+        reverb_decay: 0.5
+        reverb_delay_ms: 25
+    - name: reverb_05decay_50delay
+      aug_function: apply_reverb
+      params:
+        reverb_decay: 0.5
+        reverb_delay_ms: 50
+    - name: reverb_1decay_10delay
+      aug_function: apply_reverb
+      params:
+        reverb_decay: 1
+        reverb_delay_ms: 10
+    - name: reverb_1decay_20delay
+      aug_function: apply_reverb
+      params:
+        reverb_decay: 1
+        reverb_delay_ms: 20
+    - name: reverb_1decay_50delay
+      aug_function: apply_reverb
+      params:
+        reverb_decay: 1
+        reverb_delay_ms: 50
+
+    - name: high_pass_4000hz
+      aug_function: apply_high_pass_filter
+      params:
+        cutoff_freq: 4000
+    - name: high_pass_2000hz
+      aug_function: apply_high_pass_filter
+      params:
+        cutoff_freq: 1000
+    - name: high_pass_2000hz
+      aug_function: apply_high_pass_filter
+      params:
+        cutoff_freq: 1000
+    - name: high_pass_500hz
+      aug_function: apply_high_pass_filter
+      params:
+        cutoff_freq: 250
+    - name: high_pass_500hz
+      aug_function: apply_high_pass_filter
+      params:
+        cutoff_freq: 150
+    - name: high_pass_500hz
+      aug_function: apply_high_pass_filter
+      params:
+        cutoff_freq: 100
+    - name: high_pass_500hz
+      aug_function: apply_high_pass_filter
+      params:
+        cutoff_freq: 100
+
+    - name: low_pass_4000hz
+      aug_function: apply_low_pass_filter
+      params:
+        cutoff_freq: 4000
+    - name: low_pass_5000hz
+      aug_function: apply_low_pass_filter
+      params:
+        cutoff_freq: 5000
+    - name: low_pass_6000hz
+      aug_function: apply_low_pass_filter
+      params:
+        cutoff_freq: 6000
+    - name: low_pass_7000hz
+      aug_function: apply_low_pass_filter
+      params:
+        cutoff_freq: 7000
+    - name: low_pass_7500hz
+      aug_function: apply_low_pass_filter
+      params:
+        cutoff_freq: 7500
+    - name: low_pass_7750hz
+      aug_function: apply_low_pass_filter
+      params:
+        cutoff_freq: 7750
+
+    - name: aliasing_7750
+      aug_function: apply_aliasing
+      params:
+        target_sample_rate: 7750
+    - name: aliasing_7500
+      aug_function: apply_aliasing
+      params:
+        target_sample_rate: 7500
+    - name: aliasing_7000
+      aug_function: apply_aliasing
+      params:
+        target_sample_rate: 7000
+    - name: aliasing_6000
+      aug_function: apply_aliasing
+      params:
+        target_sample_rate: 6000
+
+    - name: mp3_compression64
+      aug_function: apply_mp3_compression
+      params:
+        bitrate: 64
+    - name: mp3_compression40
+      aug_function: apply_mp3_compression
+      params:
+        bitrate: 40
+    - name: mp3_compression32
+      aug_function: apply_mp3_compression
+      params:
+        bitrate: 32
+    - name: mp3_compression24
+      aug_function: apply_mp3_compression
+      params:
+        bitrate: 24
+    - name: mp3_compression16
+      aug_function: apply_mp3_compression
+      params:
+        bitrate: 16
+
+    - name: compress_ogg
+      aug_function: compress_audio_codec
+      params:
+        codec: ogg
