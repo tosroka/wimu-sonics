@@ -16,3 +16,5 @@ pydub
 
 openai
 audiomentations
+torch
+gradio_client

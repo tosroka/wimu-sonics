@@ -32,7 +32,7 @@ def augment_and_predict_notemp(dataset, aug_function, params, experiment_name: s
     save_path = Path(f"results/{experiment_name}") if write_to_disk else None 
     fake_dataset = FakeAudioDataset(dataset, aug_function=aug_function, params=params, max_len=16000*model_time, save_to=save_path)
 
-    prediction = make_predictions.get_predictions_local(fake_dataset)
+    prediction = make_predictions.get_predictions_torch(fake_dataset)
     return prediction
 
 # def augment_and_predict_with_dataset(dataset, aug_function, params):
@@ -83,7 +83,8 @@ def run_experiments(config_path, start_idx, write_to_disk=True):
         df = pd.DataFrame(padded_data)
         print(df)
         temp = (df > 0.5).sum(axis=0)
-        temp['real']=df.shape[0]-temp['real']
+        if 'real' in temp.index: 
+            temp['real']=df.shape[0]-temp['real']
         print("correct predictions:")
         print(temp)
         output_file = Path("results") / f"{aug['name']}_results.csv"
