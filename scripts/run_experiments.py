@@ -1,4 +1,5 @@
 """Based on input yaml file, run experiments with different augmentations and save results."""
+
 from wimu_sonics.dataset import FakeAudioDataset
 from wimu_sonics.seed_all import seedEverything
 import yaml
@@ -14,10 +15,12 @@ model_time = 120
 
 augmentation_methods.update(special_augmentation_methods)
 
+
 def load_config(config_path):
-    with open(config_path, 'r') as file:
+    with open(config_path, "r") as file:
         config = yaml.safe_load(file)
     return config
+
 
 def find_datasets(base_path: Path):
     datasets = []
@@ -26,14 +29,24 @@ def find_datasets(base_path: Path):
             datasets.append(dataset)
     return datasets
 
-def augment_and_predict_notemp(dataset, aug_function, params, experiment_name: str, write_to_disk=True):
+
+def augment_and_predict_notemp(
+    dataset, aug_function, params, experiment_name: str, write_to_disk=True
+):
     if not params:
         params = {}
-    save_path = Path(f"results/{experiment_name}") if write_to_disk else None 
-    fake_dataset = FakeAudioDataset(dataset, aug_function=aug_function, params=params, max_len=16000*model_time, save_to=save_path)
+    save_path = Path(f"results/{experiment_name}") if write_to_disk else None
+    fake_dataset = FakeAudioDataset(
+        dataset,
+        aug_function=aug_function,
+        params=params,
+        max_len=16000 * model_time,
+        save_to=save_path,
+    )
 
     prediction = make_predictions.get_predictions_torch(fake_dataset)
     return prediction
+
 
 # def augment_and_predict_with_dataset(dataset, aug_function, params):
 #     if not params:
@@ -57,6 +70,7 @@ def augment_and_predict_notemp(dataset, aug_function, params, experiment_name: s
 #         prediction = make_predictions.get_predictions_local(audio_dataset)
 #         return prediction
 
+
 def run_experiments(config_path, start_idx, write_to_disk=True):
     config = load_config(config_path)
     datasets = find_datasets(DATASETS)
@@ -64,10 +78,10 @@ def run_experiments(config_path, start_idx, write_to_disk=True):
         print("Found dataset:", dataset.name, len(list(dataset.glob("*.*"))), "files")
         # for file in list(dataset.glob("*.*")):
         #     print(file)
-    
+
     print("")
     print("Loaded configuration:")
-    for aug in config['augmentations'][start_idx:]:
+    for aug in config["augmentations"][start_idx:]:
         print(aug)
         print(aug["name"], aug["aug_function"], aug["params"])
         f = augmentation_methods[aug["aug_function"]]
@@ -75,16 +89,20 @@ def run_experiments(config_path, start_idx, write_to_disk=True):
         all_datasets = {}
         for dataset in datasets:
             print(f"Running {aug['name']} on dataset {dataset.name}")
-            dataset_preds = augment_and_predict_notemp(dataset, f, params, aug["name"], write_to_disk=write_to_disk)
+            dataset_preds = augment_and_predict_notemp(
+                dataset, f, params, aug["name"], write_to_disk=write_to_disk
+            )
             all_datasets[dataset.name] = dataset_preds
-        # fix uneven 
+        # fix uneven
         max_len = max(len(v) for v in all_datasets.values())
-        padded_data = {k: v + [None] * (max_len - len(v)) for k, v in all_datasets.items()}
+        padded_data = {
+            k: v + [None] * (max_len - len(v)) for k, v in all_datasets.items()
+        }
         df = pd.DataFrame(padded_data)
         print(df)
         temp = (df > 0.5).sum(axis=0)
-        if 'real' in temp.index: 
-            temp['real']=df.shape[0]-temp['real']
+        if "real" in temp.index:
+            temp["real"] = df.shape[0] - temp["real"]
         print("correct predictions:")
         print(temp)
         output_file = Path("results") / f"{aug['name']}_results.csv"
@@ -92,11 +110,34 @@ def run_experiments(config_path, start_idx, write_to_disk=True):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Run experiments with different audio augmentations.")
-    parser.add_argument('config_path', type=str, nargs='?', default="configs/paper.yaml", help='Path to the YAML configuration file.')
-    parser.add_argument('--start_idx', type=int, required=False, default=0, help='Index of augmentation inside config to start at.')
-    parser.add_argument('--seed', type=int, required=False, default=None, help='Random seed.')
-    parser.add_argument('--save_datasets', type=bool, required=False, default=True, action=argparse.BooleanOptionalAction, help='Whether to save augmented datasets.')
+    parser = argparse.ArgumentParser(
+        description="Run experiments with different audio augmentations."
+    )
+    parser.add_argument(
+        "config_path",
+        type=str,
+        nargs="?",
+        default="configs/paper.yaml",
+        help="Path to the YAML configuration file.",
+    )
+    parser.add_argument(
+        "--start_idx",
+        type=int,
+        required=False,
+        default=0,
+        help="Index of augmentation inside config to start at.",
+    )
+    parser.add_argument(
+        "--seed", type=int, required=False, default=None, help="Random seed."
+    )
+    parser.add_argument(
+        "--save_datasets",
+        type=bool,
+        required=False,
+        default=True,
+        action=argparse.BooleanOptionalAction,
+        help="Whether to save augmented datasets.",
+    )
     args = parser.parse_args()
 
     if args.seed:

@@ -98,5 +98,5 @@ if __name__ == "__main__":
         elif args.model == "musicgen":
             save_answer_musicgen(answer, last_num_musicgen + i, musicgen_out)
         i += 1
-    
+
     print(last_num_yue if args.model == "yue" else last_num_musicgen)

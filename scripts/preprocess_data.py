@@ -3,6 +3,7 @@ import librosa
 import soundfile as sf
 from pydub import AudioSegment
 
+
 def resample_audio(input_path, output_path, target_sr, output_format="wav"):
     # Load audio with librosa (automatically resamples)
     audio, sr = librosa.load(str(input_path), sr=target_sr)
@@ -24,7 +25,8 @@ def resample_audio(input_path, output_path, target_sr, output_format="wav"):
     else:
         raise ValueError(f"Unsupported format: {output_format}")
 
-def process_directory(input_dir, output_dir, target_sr, fmt = "mp3"):
+
+def process_directory(input_dir, output_dir, target_sr, fmt="mp3"):
     input_dir = Path(input_dir)
     output_dir = Path(output_dir)
 
@@ -38,9 +40,10 @@ def process_directory(input_dir, output_dir, target_sr, fmt = "mp3"):
         resample_audio(input_file, output_file, target_sr, fmt)
         print("done")
 
+
 if __name__ == "__main__":
     target_sample_rate = 16000
-    input_directory = "data/examples" 
+    input_directory = "data/examples"
     output_directory = f"data/examples_{target_sample_rate}"
     fmt = "mp3"
 

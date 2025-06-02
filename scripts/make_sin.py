@@ -5,7 +5,7 @@ import wimu_sonics.data.load_data as wimu
 import os
 
 
-sin_out = wimu.get_data_dir() / 'examples' / 'sin'
+sin_out = wimu.get_data_dir() / "examples" / "sin"
 
 
 if __name__ == "__main__":
@@ -27,4 +27,4 @@ if __name__ == "__main__":
 
     i = wimu.get_last_number(sin_out)
 
-    sf.write(sin_out / f'{i}.wav', y, sr)
+    sf.write(sin_out / f"{i}.wav", y, sr)
