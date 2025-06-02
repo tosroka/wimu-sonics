@@ -398,7 +398,7 @@ augmentations:
       params:
         bitrate: 24
     - name: mp3_compression_16
-      aug_function: apply_mp3_compression
+     aug_function: apply_mp3_compression
       params:
         bitrate: 16
 
