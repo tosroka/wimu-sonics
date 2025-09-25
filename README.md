@@ -1,5 +1,7 @@
 # EVALUATING FAKE MUSIC DETECTION PERFORMANCE UNDER AUDIO AUGMENTATIONS
 
+[📜 link to article](https://arxiv.org/abs/2507.10447)
+
 With the rapid advancement of generative audio models, distinguishing between human composed and generated music is becoming increasingly challenging. As a response, models for detecting fake music has been proposed. In this work, we explore the robustness of such systems under audio augmentations.
 
 To evaluate model generalization, we constructed a dataset consisting of both real and synthetic music generated using several systems. We then apply a range of audio transformations and analyze how they affect classification accuracy. Our work identifies flaws in chosen model, underlining the difficulty of constructing such solutions.
