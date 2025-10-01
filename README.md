@@ -1,6 +1,6 @@
 # EVALUATING FAKE MUSIC DETECTION PERFORMANCE UNDER AUDIO AUGMENTATIONS
 
-[📜 link to article](https://arxiv.org/abs/2507.10447)
+[📜 link to article](https://arxiv.org/abs/2507.10447) | [ISMIR 2025 Late Breaking Demos page](https://ismir2025program.ismir.net/lbd_426.html)
 
 With the rapid advancement of generative audio models, distinguishing between human composed and generated music is becoming increasingly challenging. As a response, models for detecting fake music has been proposed. In this work, we explore the robustness of such systems under audio augmentations.
 
